@@ -1,10 +1,12 @@
-clean:
-	rm -f pages/*png
+all: images pdf clean
 
-all:
+images:
 	@echo 'Creating sample document'
 	python src/main.py
 
+clean:
+	rm -f pages/*png
+
 # Create the PDF with ImageMagick
 pdf:
-	convert pages/*.png doc.pdf
+	convert pages/*.png texts/sample01.pdf

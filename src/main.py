@@ -20,7 +20,11 @@ class Writer:
     fontSize = 68
     wordSpacing = [15,25]
     margin = (150,150)
+    paragraphSpacing = [2,2.5]
+
+    # This need to be taken from the command line
     textFile = './texts/sample01.txt'
+    penColor = (0,0,77)
 
     # Process page size
     pageWidth = dpi * width / 10
@@ -34,8 +38,10 @@ class Writer:
     draw = ImageDraw.Draw(img)
 
     # Load the text, and split by paragraphs
-    text = open(textFile, 'r')
-    paragraphs = text.read().split('\n\n')
+    reader = open(textFile, 'r')
+    text = reader.read()
+    text = re.sub(r'\n\n+', '\n\n', text)
+    paragraphs = text.split('\n\n')
 
     # Line tendance neg=down, pos=up
     direction = [2,3]
@@ -61,23 +67,27 @@ class Writer:
             self.newPage()
 
     def newParagraph(self):
-      self.x = self.margin[0] + 2 * random.randint(-5,5)
-      self.y += 1.5 * self.fontSize + 5 * self.direction[1]
+        self.x = self.margin[0] + 2 * random.randint(-5,5)
+        spcMin = 10 * self.paragraphSpacing[0]
+        spcMax = 10 * self.paragraphSpacing[1]
+        spacing = (random.randint(spcMin, spcMax)) / 10
+        self.y += spacing * self.fontSize + 3 * self.direction[1]
+        if self.y >= (self.pageHeight - self.margin[1]):
+            self.newPage()
 
     # Draw the character
     def drawCharacter1(self, word, size):
-      self.draw.text((self.x, self.y), word, (0,0,0), font=self.writingFont)
+        self.draw.text((self.x, self.y), word, self.penColor, font=self.writingFont)
 
     # Draw the character
     def drawCharacter2(self, word, size):
         charImg = Image.new("RGBA", size, (255,255,255))
         charDraw = ImageDraw.Draw(charImg)
-        self.draw.image((self.x, self.y), charImg, (0,0,0), font=self.writingFont)
+        self.draw.image((self.x, self.y), charImg, self.penColor, font=self.writingFont)
 
     # Write words
     def createDoc(self):
         for paragraph in self.paragraphs:
-            paragraph = paragraph.replace('\n', ' ')
             paragraph = re.sub(r'\s+', ' ', paragraph)
             words = paragraph.split(' ')
             self.x = self.margin[0]
