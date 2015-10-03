@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
     face = Face('./fonts/' + fontName)
     face.set_char_size( 32*64 )
-    face.load_char('an')
+    face.load_char('a')
     slot = face.glyph
 
     bitmap = face.glyph.bitmap
@@ -44,6 +44,7 @@ if __name__ == '__main__':
     start, end = 0, 0
 
     VERTS, CODES = [], []
+
     # Iterate over each contour
     for i in range(len(outline.contours)):
         end    = outline.contours[i]

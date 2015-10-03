@@ -18,7 +18,7 @@ class Writer:
     dpi = 90
     fontPath = './fonts/HaloHandletter.otf'
     fontSize = 68
-    wordSpacing = 20
+    wordSpacing = [15,25]
     margin = (150,150)
     textFile = './texts/sample01.txt'
 
@@ -37,8 +37,8 @@ class Writer:
     text = open(textFile, 'r')
     paragraphs = text.read().split('\n\n')
 
-    # Line tendance neg=up, pos=down
-    direction = -1
+    # Line tendance neg=down, pos=up
+    direction = [2,3]
 
     # remember current page and position
     pageNb = 1
@@ -56,9 +56,23 @@ class Writer:
 
     def newLine(self, isLastWord=False):
         self.x = self.margin[0] + 2 * random.randint(-5,5)
-        self.y += self.fontSize + 2 * random.randint(-5,5) - self.direction
+        self.y += self.fontSize + 10 * self.direction[1]
         if not isLastWord and self.y >= (self.pageHeight - self.margin[1]):
             self.newPage()
+
+    def newParagraph(self):
+      self.x = self.margin[0] + 2 * random.randint(-5,5)
+      self.y += 1.5 * self.fontSize + 5 * self.direction[1]
+
+    # Draw the character
+    def drawCharacter1(self, word, size):
+      self.draw.text((self.x, self.y), word, (0,0,0), font=self.writingFont)
+
+    # Draw the character
+    def drawCharacter2(self, word, size):
+        charImg = Image.new("RGBA", size, (255,255,255))
+        charDraw = ImageDraw.Draw(charImg)
+        self.draw.image((self.x, self.y), charImg, (0,0,0), font=self.writingFont)
 
     # Write words
     def createDoc(self):
@@ -70,20 +84,21 @@ class Writer:
             nbWords = len(words)
             for idx, word in enumerate(words, start=1):
                 isLastWord = idx == nbWords
+
                 # Check with if there is enough space on the line for the word
                 size = self.draw.textsize(word, font=self.writingFont)
                 if (self.x + size[0]) > (self.pageWidth - self.margin[0]):
                     self.newLine(isLastWord)
+
                 # Draw the character
-                self.draw.text((self.x, self.y), word, (0,0,0), font=self.writingFont)
+                self.drawCharacter1(word, size)
 
                 # avance cursor
-                self.x += size[0] + self.wordSpacing
-                self.y += self.direction
+                self.x += size[0] + random.randint(self.wordSpacing[0], self.wordSpacing[1])
+                self.y -= random.randint(self.direction[0], self.direction[1])
 
             # new paragraph
-            self.newLine()
-            self.newLine()
+            self.newParagraph()
 
         # Save last page
         self.draw = ImageDraw.Draw(self.img)
