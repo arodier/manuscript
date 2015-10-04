@@ -5,7 +5,7 @@ images:
 	python src/main.py
 
 clean:
-	rm -f pages/*png
+	echo rm -f pages/*png
 
 # Create the PDF with ImageMagick
 pdf:
