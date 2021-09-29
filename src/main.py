@@ -27,8 +27,8 @@ class Writer:
     penColor = (0,0,77)
 
     # Process page size
-    pageWidth = dpi * width / 10
-    pageHeight = dpi * height / 10
+    pageWidth = int(dpi * width / 10)
+    pageHeight = int(dpi * height / 10)
 
     # Load the default font
     writingFont = ImageFont.truetype(fontPath, fontSize)
