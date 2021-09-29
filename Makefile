@@ -1,8 +1,11 @@
-all: images pdf clean
+all: prepare images pdf clean
+
+prepare:
+	test -d pages || mkdir pages
 
 images:
 	@echo 'Creating sample document'
-	python src/main.py
+	python3 src/main.py
 
 clean:
 	echo rm -f pages/*png
